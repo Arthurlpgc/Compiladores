@@ -30,16 +30,16 @@ statement:		'{'(statement)*'}'
 			|	identifier'='expression';'
 			|	identifier'['expression']''='expression';';		
 
-method_declaration: 'public'type identifier'('(type identifier(','type identifier)*)?')''{'(var_declaration)*(statement)*'return'expression';''}';
+method_declaration: 'public'formal'('(formal(','formal)*)?')''{'(var_declaration)*(statement)*'return'expression';''}';
 
-var_declaration:	type identifier';';
+var_declaration:	formal';';
 
 class_declaration:	'class'identifier('extends'identifier)?'{'(var_declaration)*(method_declaration)*'}';
 
 
 main_class:		'class'identifier'{''public''static''void''main''(''String''['']' identifier ')' '{' statement '}' '}';
 
-
+formal: type identifier;
 goal:		main_class (class_declaration)* EOF;
 
 IDENTIFIER:('_'|[A-za-z])(([A-Za-z]|[0-9]|'_')+)*;

@@ -8,6 +8,16 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface alpgc_jvsnListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link alpgc_jvsnParser#formal}.
+	 * @param ctx the parse tree
+	 */
+	void enterFormal(@NotNull alpgc_jvsnParser.FormalContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link alpgc_jvsnParser#formal}.
+	 * @param ctx the parse tree
+	 */
+	void exitFormal(@NotNull alpgc_jvsnParser.FormalContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link alpgc_jvsnParser#identifier}.
 	 * @param ctx the parse tree
 	 */
