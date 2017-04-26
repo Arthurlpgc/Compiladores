@@ -1,42 +1,5 @@
 import java.util.List;
-
-import ast.And;
-import ast.ArrayAssign;
-import ast.ArrayLength;
-import ast.ArrayLookup;
-import ast.Assign;
-import ast.Block;
-import ast.BooleanType;
-import ast.Call;
-import ast.ClassDecl;
-import ast.ClassDeclList;
-import ast.Exp;
-import ast.ExpList;
-import ast.False;
-import ast.Formal;
-import ast.Identifier;
-import ast.IdentifierType;
-import ast.If;
-import ast.IntArrayType;
-import ast.IntegerLiteral;
-import ast.IntegerType;
-import ast.LessThan;
-import ast.MainClass;
-import ast.Minus;
-import ast.NewArray;
-import ast.NewObject;
-import ast.Not;
-import ast.Plus;
-import ast.Print;
-import ast.Program;
-import ast.Statement;
-import ast.StatementList;
-import ast.This;
-import ast.Times;
-import ast.True;
-import ast.Type;
-import ast.VarDecl;
-import ast.While;
+import ast.*;
 
 public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 	public Object visitGoal(alpgc_jvsnParser.GoalContext ctx){
@@ -51,6 +14,21 @@ public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 	public Object visitIdentifier(alpgc_jvsnParser.IdentifierContext ctx){
 		return new Identifier(ctx.getText());
 	}
+	public Object visitMain_class(alpgc_jvsnParser.Main_classContext ctx){
+		return new MainClass((Identifier)this.visit(ctx.identifier(0)),(Identifier)this.visit(ctx.identifier(1)),(Statement)this.visit(ctx.statement()));
+	}
+	public Object visitClass_declaration(alpgc_jvsnParser.Class_declarationContext ctx){
+		VarDeclList varlist=new VarDeclList();
+		for(alpgc_jvsnParser.Var_declarationContext vctx:ctx.var_declaration()){
+			varlist.addElement((VarDecl)this.visit(vctx));
+		}
+		MethodDeclList mdl=new MethodDeclList();
+		for(alpgc_jvsnParser.Method_declarationContext mctx:ctx.method_declaration()){
+			mdl.addElement((MethodDecl)this.visit(mctx));
+		}
+		if(ctx.identifier(1)==null)return new ClassDeclSimple((Identifier)this.visit(ctx.identifier(0)), varlist, mdl);
+		else return new ClassDeclExtends((Identifier)this.visit(ctx.identifier(0)),(Identifier)this.visit(ctx.identifier(1)), varlist, mdl);
+	}
 	public Object visitType(alpgc_jvsnParser.TypeContext ctx){
 		if(ctx.getChild(0).getText()=="boolean")return new BooleanType();
 		else if(ctx.getChild(0).getText()=="int"){
@@ -64,6 +42,26 @@ public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 	public Object visitVar_declaration(alpgc_jvsnParser.Var_declarationContext ctx){
 		Formal f=(Formal)this.visit(ctx.formal());
 		return new VarDecl(f.t,f.i);
+	}
+	public Object visitMethod_declaration(alpgc_jvsnParser.Method_declarationContext ctx){
+		Formal auxf=(Formal)this.visit(ctx.formal(0));
+		List<alpgc_jvsnParser.FormalContext> frms=ctx.formal();
+		frms.remove(0);
+		FormalList frmlist=new FormalList();
+		for(alpgc_jvsnParser.FormalContext frm:frms){
+			frmlist.addElement((Formal)this.visit(frm));
+		}
+		List<alpgc_jvsnParser.Var_declarationContext> vrbs=ctx.var_declaration();
+		VarDeclList vrblist=new VarDeclList();
+		for(alpgc_jvsnParser.Var_declarationContext vrb:vrbs){
+			vrblist.addElement((VarDecl)this.visit(vrb));
+		}
+		List<alpgc_jvsnParser.StatementContext> stts=ctx.statement();
+		StatementList sttlist=new StatementList();
+		for(alpgc_jvsnParser.StatementContext stt:stts){
+			sttlist.addElement((Statement)this.visit(stt));
+		}
+		return new MethodDecl(auxf.t, auxf.i, frmlist, vrblist, sttlist, (Exp)this.visit(ctx.expression()));
 	}
 	public Object visitStatement(alpgc_jvsnParser.StatementContext ctx){
 		if(ctx.getChild(0).getText()=="{"){
