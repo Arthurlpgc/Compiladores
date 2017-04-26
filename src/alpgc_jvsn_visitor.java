@@ -1,8 +1,10 @@
 import java.util.List;
 
 import ast.And;
+import ast.ArrayAssign;
 import ast.ArrayLength;
 import ast.ArrayLookup;
+import ast.Assign;
 import ast.Block;
 import ast.BooleanType;
 import ast.Call;
@@ -14,6 +16,7 @@ import ast.False;
 import ast.Formal;
 import ast.Identifier;
 import ast.IdentifierType;
+import ast.If;
 import ast.IntArrayType;
 import ast.IntegerLiteral;
 import ast.IntegerType;
@@ -24,6 +27,7 @@ import ast.NewArray;
 import ast.NewObject;
 import ast.Not;
 import ast.Plus;
+import ast.Print;
 import ast.Program;
 import ast.Statement;
 import ast.StatementList;
@@ -32,6 +36,7 @@ import ast.Times;
 import ast.True;
 import ast.Type;
 import ast.VarDecl;
+import ast.While;
 
 public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 	public Object visitGoal(alpgc_jvsnParser.GoalContext ctx){
@@ -67,8 +72,15 @@ public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 				sl.addElement((Statement)this.visit(s));
 			}
 			return new Block(sl);
-		}
-		return null;
+		}else if(ctx.getChild(0).getText()=="if"){
+			return new If((Exp)this.visit(ctx.expression(0)),(Statement)this.visit(ctx.statement(0)),(Statement)this.visit(ctx.statement(1)));
+		}else if(ctx.getChild(0).getText()=="while"){
+			return new While((Exp)this.visit(ctx.expression(0)),(Statement)this.visit(ctx.statement(0)));
+		}else if(ctx.getChild(0).getText()=="System.out.println"){
+			return new Print((Exp)this.visit(ctx.expression(0)));
+		}else if(ctx.getChild(1).getText()=="="){
+			return new Assign((Identifier)this.visit(ctx.identifier()),(Exp)this.visit(ctx.expression(0)));
+		}else return new ArrayAssign((Identifier)this.visit(ctx.identifier()),(Exp)this.visit(ctx.expression(0)),(Exp)this.visit(ctx.expression(1)));
 	}
 	public Object visitExpression(alpgc_jvsnParser.ExpressionContext ctx){
 		if(ctx.getChild(0).getText()=="true")return new True();
