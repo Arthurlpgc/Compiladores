@@ -45,3 +45,4 @@ goal:		main_class (class_declaration)* EOF;
 IDENTIFIER:('_'|[A-za-z])(([A-Za-z]|[0-9]|'_')+)*;
 INTEGERLITERAL:([1-9][0-9]*)|'0';
 SPACES:('\n'|' '|'\r'|'\t')->skip;
+COMMENT_LINE: '//'(~'\n')* ->skip;
