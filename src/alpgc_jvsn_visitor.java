@@ -34,7 +34,7 @@ public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 		else if(ctx.getChild(0).getText().equals("int")){
 			if(ctx.getChildCount()==1)return new IntegerType();
 			else return new IntArrayType();
-		}else return (IdentifierType)this.visit(ctx.identifier());
+		}else return new IdentifierType(ctx.getText());
 	}
 	public Object visitFormal(alpgc_jvsnParser.FormalContext ctx){
 		return new Formal((Type) this.visit(ctx.type()), (Identifier) this.visit(ctx.identifier()));
