@@ -21,14 +21,14 @@ public class alpgc_jvsnParser extends Parser {
 		T__18=17, T__17=18, T__16=19, T__15=20, T__14=21, T__13=22, T__12=23, 
 		T__11=24, T__10=25, T__9=26, T__8=27, T__7=28, T__6=29, T__5=30, T__4=31, 
 		T__3=32, T__2=33, T__1=34, T__0=35, IDENTIFIER=36, INTEGERLITERAL=37, 
-		SPACES=38, COMMENT_LINE=39;
+		SPACES=38, COMMENT_LINE=39, MULTILINE_COMMENT=40;
 	public static final String[] tokenNames = {
 		"<INVALID>", "'main'", "'length'", "'new'", "'true'", "'return'", "'class'", 
 		"'while'", "';'", "'void'", "'{'", "'&&'", "'='", "'extends'", "'}'", 
 		"'if'", "'int'", "'('", "'*'", "'this'", "','", "'false'", "'.'", "'boolean'", 
 		"'System.out.println'", "'['", "'<'", "'String'", "']'", "'public'", "'!'", 
 		"'static'", "'else'", "')'", "'+'", "'-'", "IDENTIFIER", "INTEGERLITERAL", 
-		"SPACES", "COMMENT_LINE"
+		"SPACES", "COMMENT_LINE", "MULTILINE_COMMENT"
 	};
 	public static final int
 		RULE_goal = 0, RULE_main_class = 1, RULE_formal = 2, RULE_method_declaration = 3, 
@@ -956,7 +956,7 @@ public class alpgc_jvsnParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3)\u00db\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3*\u00db\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\3\2\3\2\7\2\31\n\2\f\2\16\2\34\13\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3"+
 		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\4\3\4\3\4\3\5\3\5"+

@@ -22,7 +22,7 @@ statement:		'{'(statement)*'}'
 			|	identifier '=' expression ';'
 			|	identifier'['expression']''='expression';';		
 expression: 	expression('&&'|'+'|'-'|'*'|'<')expression
-			|	expression '[' expression ']'
+			|	expression'['expression']'
 			|	expression'.''length'
 			|	expression'.'identifier'('(expression(','expression)*)?')'
 			|	INTEGERLITERAL
@@ -40,7 +40,9 @@ expression: 	expression('&&'|'+'|'-'|'*'|'<')expression
 
 
 
-IDENTIFIER:('_'|[A-za-z])(([A-Za-z]|[0-9]|'_')+)*;
+IDENTIFIER:('_'|[A-za-z])((([A-Za-z]|[0-9]|'_')+)*);
 INTEGERLITERAL:([1-9][0-9]*)|'0';
 SPACES:('\n'|' '|'\r'|'\t')->skip;
 COMMENT_LINE: '//'(~[\n\r])* ->skip;
+
+MULTILINE_COMMENT   : '/*' .*? '*/' -> skip ;
