@@ -3,6 +3,7 @@ import java.util.List;
 import ast.And;
 import ast.ArrayLength;
 import ast.ArrayLookup;
+import ast.Block;
 import ast.BooleanType;
 import ast.Call;
 import ast.ClassDecl;
@@ -10,7 +11,9 @@ import ast.ClassDeclList;
 import ast.Exp;
 import ast.ExpList;
 import ast.False;
+import ast.Formal;
 import ast.Identifier;
+import ast.IdentifierType;
 import ast.IntArrayType;
 import ast.IntegerLiteral;
 import ast.IntegerType;
@@ -21,19 +24,24 @@ import ast.NewArray;
 import ast.NewObject;
 import ast.Not;
 import ast.Plus;
+import ast.Program;
+import ast.Statement;
+import ast.StatementList;
 import ast.This;
 import ast.Times;
 import ast.True;
+import ast.Type;
+import ast.VarDecl;
 
 public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
-	@Override
 	public Object visitGoal(alpgc_jvsnParser.GoalContext ctx){
 		MainClass main=(MainClass) this.visit(ctx.getChild(0));
 		ClassDeclList lista=new ClassDeclList();
 		for(alpgc_jvsnParser.Class_declarationContext k:ctx.class_declaration()){
 			lista.addElement((ClassDecl)this.visit(k));
 		}
-		return ctx;
+		Program program = new Program(main, lista);
+		return program;
 	}
 	public Object visitIdentifier(alpgc_jvsnParser.IdentifierContext ctx){
 		return new Identifier(ctx.getText());
@@ -43,9 +51,23 @@ public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 		else if(ctx.getChild(0).getText()=="int"){
 			if(ctx.getChildCount()==1)return new IntegerType();
 			else return new IntArrayType();
-		}else return (Identifier)this.visit(ctx.identifier());
+		}else return (IdentifierType)this.visit(ctx.identifier());
+	}
+	public Object visitFormal(alpgc_jvsnParser.FormalContext ctx){
+		return new Formal((Type) this.visit(ctx.type()), (Identifier) this.visit(ctx.identifier()));
+	}
+	public Object visitVar_declaration(alpgc_jvsnParser.Var_declarationContext ctx){
+		Formal f=(Formal)this.visit(ctx.formal());
+		return new VarDecl(f.t,f.i);
 	}
 	public Object visitStatement(alpgc_jvsnParser.StatementContext ctx){
+		if(ctx.getChild(0).getText()=="{"){
+			StatementList sl= new StatementList();
+			for(alpgc_jvsnParser.StatementContext s:ctx.statement()){
+				sl.addElement((Statement)this.visit(s));
+			}
+			return new Block(sl);
+		}
 		return null;
 	}
 	public Object visitExpression(alpgc_jvsnParser.ExpressionContext ctx){
