@@ -40,18 +40,6 @@ public class alpgc_jvsnBaseListener implements alpgc_jvsnListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpression(@NotNull alpgc_jvsnParser.ExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExpression(@NotNull alpgc_jvsnParser.ExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterGoal(@NotNull alpgc_jvsnParser.GoalContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -59,6 +47,18 @@ public class alpgc_jvsnBaseListener implements alpgc_jvsnListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitGoal(@NotNull alpgc_jvsnParser.GoalContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExpression(@NotNull alpgc_jvsnParser.ExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpression(@NotNull alpgc_jvsnParser.ExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -100,13 +100,13 @@ public class alpgc_jvsnBaseListener implements alpgc_jvsnListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterType(@NotNull alpgc_jvsnParser.TypeContext ctx) { }
+	@Override public void enterMain_class(@NotNull alpgc_jvsnParser.Main_classContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitType(@NotNull alpgc_jvsnParser.TypeContext ctx) { }
+	@Override public void exitMain_class(@NotNull alpgc_jvsnParser.Main_classContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -124,13 +124,13 @@ public class alpgc_jvsnBaseListener implements alpgc_jvsnListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMain_class(@NotNull alpgc_jvsnParser.Main_classContext ctx) { }
+	@Override public void enterType(@NotNull alpgc_jvsnParser.TypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMain_class(@NotNull alpgc_jvsnParser.Main_classContext ctx) { }
+	@Override public void exitType(@NotNull alpgc_jvsnParser.TypeContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

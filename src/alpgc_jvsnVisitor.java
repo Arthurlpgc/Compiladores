@@ -23,17 +23,17 @@ public interface alpgc_jvsnVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIdentifier(@NotNull alpgc_jvsnParser.IdentifierContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link alpgc_jvsnParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExpression(@NotNull alpgc_jvsnParser.ExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link alpgc_jvsnParser#goal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitGoal(@NotNull alpgc_jvsnParser.GoalContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link alpgc_jvsnParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpression(@NotNull alpgc_jvsnParser.ExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link alpgc_jvsnParser#method_declaration}.
 	 * @param ctx the parse tree
@@ -53,11 +53,11 @@ public interface alpgc_jvsnVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVar_declaration(@NotNull alpgc_jvsnParser.Var_declarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link alpgc_jvsnParser#type}.
+	 * Visit a parse tree produced by {@link alpgc_jvsnParser#main_class}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitType(@NotNull alpgc_jvsnParser.TypeContext ctx);
+	T visitMain_class(@NotNull alpgc_jvsnParser.Main_classContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link alpgc_jvsnParser#class_declaration}.
 	 * @param ctx the parse tree
@@ -65,9 +65,9 @@ public interface alpgc_jvsnVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClass_declaration(@NotNull alpgc_jvsnParser.Class_declarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link alpgc_jvsnParser#main_class}.
+	 * Visit a parse tree produced by {@link alpgc_jvsnParser#type}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMain_class(@NotNull alpgc_jvsnParser.Main_classContext ctx);
+	T visitType(@NotNull alpgc_jvsnParser.TypeContext ctx);
 }

@@ -31,14 +31,14 @@ public class alpgc_jvsnBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitExpression(@NotNull alpgc_jvsnParser.ExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitGoal(@NotNull alpgc_jvsnParser.GoalContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitGoal(@NotNull alpgc_jvsnParser.GoalContext ctx) { return visitChildren(ctx); }
+	@Override public T visitExpression(@NotNull alpgc_jvsnParser.ExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -66,7 +66,7 @@ public class alpgc_jvsnBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitType(@NotNull alpgc_jvsnParser.TypeContext ctx) { return visitChildren(ctx); }
+	@Override public T visitMain_class(@NotNull alpgc_jvsnParser.Main_classContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -80,5 +80,5 @@ public class alpgc_jvsnBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitMain_class(@NotNull alpgc_jvsnParser.Main_classContext ctx) { return visitChildren(ctx); }
+	@Override public T visitType(@NotNull alpgc_jvsnParser.TypeContext ctx) { return visitChildren(ctx); }
 }

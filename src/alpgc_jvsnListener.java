@@ -28,16 +28,6 @@ public interface alpgc_jvsnListener extends ParseTreeListener {
 	 */
 	void exitIdentifier(@NotNull alpgc_jvsnParser.IdentifierContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link alpgc_jvsnParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void enterExpression(@NotNull alpgc_jvsnParser.ExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link alpgc_jvsnParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void exitExpression(@NotNull alpgc_jvsnParser.ExpressionContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link alpgc_jvsnParser#goal}.
 	 * @param ctx the parse tree
 	 */
@@ -47,6 +37,16 @@ public interface alpgc_jvsnListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitGoal(@NotNull alpgc_jvsnParser.GoalContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link alpgc_jvsnParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpression(@NotNull alpgc_jvsnParser.ExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link alpgc_jvsnParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpression(@NotNull alpgc_jvsnParser.ExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link alpgc_jvsnParser#method_declaration}.
 	 * @param ctx the parse tree
@@ -78,15 +78,15 @@ public interface alpgc_jvsnListener extends ParseTreeListener {
 	 */
 	void exitVar_declaration(@NotNull alpgc_jvsnParser.Var_declarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link alpgc_jvsnParser#type}.
+	 * Enter a parse tree produced by {@link alpgc_jvsnParser#main_class}.
 	 * @param ctx the parse tree
 	 */
-	void enterType(@NotNull alpgc_jvsnParser.TypeContext ctx);
+	void enterMain_class(@NotNull alpgc_jvsnParser.Main_classContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link alpgc_jvsnParser#type}.
+	 * Exit a parse tree produced by {@link alpgc_jvsnParser#main_class}.
 	 * @param ctx the parse tree
 	 */
-	void exitType(@NotNull alpgc_jvsnParser.TypeContext ctx);
+	void exitMain_class(@NotNull alpgc_jvsnParser.Main_classContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link alpgc_jvsnParser#class_declaration}.
 	 * @param ctx the parse tree
@@ -98,13 +98,13 @@ public interface alpgc_jvsnListener extends ParseTreeListener {
 	 */
 	void exitClass_declaration(@NotNull alpgc_jvsnParser.Class_declarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link alpgc_jvsnParser#main_class}.
+	 * Enter a parse tree produced by {@link alpgc_jvsnParser#type}.
 	 * @param ctx the parse tree
 	 */
-	void enterMain_class(@NotNull alpgc_jvsnParser.Main_classContext ctx);
+	void enterType(@NotNull alpgc_jvsnParser.TypeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link alpgc_jvsnParser#main_class}.
+	 * Exit a parse tree produced by {@link alpgc_jvsnParser#type}.
 	 * @param ctx the parse tree
 	 */
-	void exitMain_class(@NotNull alpgc_jvsnParser.Main_classContext ctx);
+	void exitType(@NotNull alpgc_jvsnParser.TypeContext ctx);
 }

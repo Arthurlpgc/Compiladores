@@ -18,9 +18,9 @@ public class teste {
 		alpgc_jvsnParser parser = new alpgc_jvsnParser(token);
 		ParseTree tree=parser.goal();
 		System.out.println(tree.toStringTree(parser));
-		alpgc_jvsn_visitor visitor=new alpgc_jvsn_visitor();
+		/*alpgc_jvsn_visitor visitor=new alpgc_jvsn_visitor();
 		Program program = (Program) visitor.visit(tree);
-		program.accept(new PrettyPrintVisitor());
+		program.accept(new PrettyPrintVisitor());*/
 	}
 
 }
