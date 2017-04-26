@@ -1,12 +1,19 @@
+import java.util.List;
+
 import ast.And;
 import ast.ArrayLength;
 import ast.ArrayLookup;
+import ast.BooleanType;
+import ast.Call;
 import ast.ClassDecl;
 import ast.ClassDeclList;
 import ast.Exp;
+import ast.ExpList;
 import ast.False;
 import ast.Identifier;
+import ast.IntArrayType;
 import ast.IntegerLiteral;
+import ast.IntegerType;
 import ast.LessThan;
 import ast.MainClass;
 import ast.Minus;
@@ -30,6 +37,16 @@ public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 	}
 	public Object visitIdentifier(alpgc_jvsnParser.IdentifierContext ctx){
 		return new Identifier(ctx.getText());
+	}
+	public Object visitType(alpgc_jvsnParser.TypeContext ctx){
+		if(ctx.getChild(0).getText()=="boolean")return new BooleanType();
+		else if(ctx.getChild(0).getText()=="int"){
+			if(ctx.getChildCount()==1)return new IntegerType();
+			else return new IntArrayType();
+		}else return (Identifier)this.visit(ctx.identifier());
+	}
+	public Object visitStatement(alpgc_jvsnParser.StatementContext ctx){
+		return null;
 	}
 	public Object visitExpression(alpgc_jvsnParser.ExpressionContext ctx){
 		if(ctx.getChild(0).getText()=="true")return new True();
@@ -55,8 +72,17 @@ public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 		}else if(ctx.getChild(1).getText()=="*"){
 			return new Times((Exp)this.visit(ctx.expression(0)),(Exp)this.visit(ctx.expression(1)));
 		}else if(ctx.getChild(2).getText()=="length")return new ArrayLength((Exp) this.visit(ctx.expression(0)));
-		else if(ctx.INTEGERLITERAL()!=null)return new IntegerLiteral(Integer.parseInt((ctx.INTEGERLITERAL().getText())));
-		return null;
+		else if(ctx.getChild(1).getText()=="."){
+			Exp base=(Exp) this.visit(ctx.expression(0));
+			List<alpgc_jvsnParser.ExpressionContext> listaexp = ctx.expression();
+			listaexp.remove(0);
+			ExpList listaExpRet=new ExpList();
+			for(alpgc_jvsnParser.ExpressionContext item:listaexp){
+				listaExpRet.addElement((Exp)this.visit(item));
+			}
+			return new Call(base, (Identifier)this.visit(ctx.identifier()), listaExpRet);
+		}else if(ctx.INTEGERLITERAL()!=null)return new IntegerLiteral(Integer.parseInt((ctx.INTEGERLITERAL().getText())));
+		else return (Identifier)this.visit(ctx.identifier());
 	}
 	
 }
