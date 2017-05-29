@@ -12,6 +12,7 @@ import ast.Assign;
 import ast.Block;
 import ast.BooleanType;
 import ast.Call;
+import ast.ClassDecl;
 import ast.ClassDeclExtends;
 import ast.ClassDeclSimple;
 import ast.False;
@@ -65,7 +66,7 @@ public class BuildSymbolTableVisitor implements Visitor {
 
 	// Identifier i1,i2;
 	// Statement s;
-	public void visit(MainClass n) {
+	public void visit(MainClass n) { //MainClass doesn't extends ClassDecl. So it isn't necessary to add it on the SymbolTable
 		n.i1.accept(this);
 		n.i2.accept(this);
 		n.s.accept(this);
@@ -75,12 +76,16 @@ public class BuildSymbolTableVisitor implements Visitor {
 	// VarDeclList vl;
 	// MethodDeclList ml;
 	public void visit(ClassDeclSimple n) {
+		this.symbolTable.addClass(n.i.toString(), null);
+		this.currClass = symbolTable.getClass(n.i.toString());
 		n.i.accept(this);
 		for (int i = 0; i < n.vl.size(); i++) {
-			n.vl.elementAt(i).accept(this);
+			VarDecl var = n.vl.elementAt(i);
+			var.accept(this);
 		}
 		for (int i = 0; i < n.ml.size(); i++) {
-			n.ml.elementAt(i).accept(this);
+			MethodDecl method = n.ml.elementAt(i);
+			method.accept(this);
 		}
 	}
 
@@ -89,19 +94,23 @@ public class BuildSymbolTableVisitor implements Visitor {
 	// VarDeclList vl;
 	// MethodDeclList ml;
 	public void visit(ClassDeclExtends n) {
+		this.symbolTable.addClass(n.i.toString(), n.j.toString());
 		n.i.accept(this);
 		n.j.accept(this);
 		for (int i = 0; i < n.vl.size(); i++) {
-			n.vl.elementAt(i).accept(this);
+			VarDecl var = n.vl.elementAt(i);
+			var.accept(this);
 		}
 		for (int i = 0; i < n.ml.size(); i++) {
-			n.ml.elementAt(i).accept(this);
+			MethodDecl method = n.ml.elementAt(i);
+			method.accept(this);
 		}
 	}
 
 	// Type t;
 	// Identifier i;
 	public void visit(VarDecl n) {
+		this.currClass.addVar(n.i.toString(), n.t);
 		n.t.accept(this);
 		n.i.accept(this);
 	}
@@ -113,15 +122,20 @@ public class BuildSymbolTableVisitor implements Visitor {
 	// StatementList sl;
 	// Exp e;
 	public void visit(MethodDecl n) {
+		this.currClass.addMethod(n.i.toString(), n.t);
+		this.currMethod = this.currClass.getMethod(n.i.toString());
 		n.t.accept(this);
 		n.i.accept(this);
-		for (int i = 0; i < n.fl.size(); i++) {
-			n.fl.elementAt(i).accept(this);
+		for (int i = 0; i < n.fl.size(); i++) { // The first formal (type and indentfier's method) is removed
+			Formal formal = n.fl.elementAt(i);
+			formal.accept(this);
 		}
 		for (int i = 0; i < n.vl.size(); i++) {
+			VarDecl var = n.vl.elementAt(i);
+			this.currMethod.addVar(var.i.toString(), var.t);
 			n.vl.elementAt(i).accept(this);
 		}
-		for (int i = 0; i < n.sl.size(); i++) {
+		for (int i = 0; i < n.sl.size(); i++) { //Statement is the method's body
 			n.sl.elementAt(i).accept(this);
 		}
 		n.e.accept(this);
@@ -130,6 +144,7 @@ public class BuildSymbolTableVisitor implements Visitor {
 	// Type t;
 	// Identifier i;
 	public void visit(Formal n) {
+		this.currMethod.addParam(n.i.toString(), n.t);
 		n.t.accept(this);
 		n.i.accept(this);
 	}
