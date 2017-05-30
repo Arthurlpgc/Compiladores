@@ -125,13 +125,13 @@ public class BuildSymbolTableVisitor implements Visitor {
 		if(this.currMethod == null) {
 			boolean sucess = this.currClass.addVar(n.i.toString(), n.t);
 			if(!sucess) {
-				System.out.println("Error: Variable already declared in this class");
+				System.out.println("Error when adding variable: Variable already declared in class " + this.currClass.getId());
 			}
 		}
 		else {
 			boolean sucess = this.currMethod.addVar(n.i.toString(), n.t);
 			if(!sucess) {
-				System.out.println("Error: Variable already declared in this method");
+				System.out.println("Error when adding variable: Variable already declared in method " +this.currMethod.getId() );
 			}
 		}
 		n.t.accept(this);
@@ -147,7 +147,7 @@ public class BuildSymbolTableVisitor implements Visitor {
 	public void visit(MethodDecl n) {
 		boolean sucess = this.currClass.addMethod(n.i.toString(), n.t);
 		if(!sucess) {
-			System.out.println("Error: Method " + n.i.toString() + " already declared");
+			System.out.println("Error in method addition: Method " + n.i.toString() + " already declared");
 		}
 		this.currMethod = this.currClass.getMethod(n.i.toString());
 		n.t.accept(this);

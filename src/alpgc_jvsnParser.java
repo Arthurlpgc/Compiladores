@@ -23,7 +23,7 @@ public class alpgc_jvsnParser extends Parser {
 		T__3=32, T__2=33, T__1=34, T__0=35, IDENTIFIER=36, INTEGERLITERAL=37, 
 		SPACES=38, COMMENT_LINE=39, MULTILINE_COMMENT=40;
 	public static final String[] tokenNames = {
-		"<INVALID>", "'main'", "'length'", "'new'", "'true'", "'return'", "'class'", 
+		"<INVALID>", "'main'", "'length'", "'true'", "'new'", "'return'", "'class'", 
 		"'while'", "';'", "'void'", "'{'", "'&&'", "'='", "'extends'", "'}'", 
 		"'if'", "'int'", "'('", "'*'", "'this'", "','", "'false'", "'.'", "'boolean'", 
 		"'System.out.println'", "'['", "'<'", "'String'", "']'", "'public'", "'!'", 
@@ -790,41 +790,41 @@ public class alpgc_jvsnParser extends Parser {
 				break;
 			case 2:
 				{
-				setState(162); match(INTEGERLITERAL);
+				setState(162); match(T__31);
+				setState(163); match(T__19);
+				setState(164); match(T__10);
+				setState(165); expression(0);
+				setState(166); match(T__7);
 				}
 				break;
 			case 3:
 				{
-				setState(163); match(T__31);
+				setState(168); match(INTEGERLITERAL);
 				}
 				break;
 			case 4:
 				{
-				setState(164); match(T__14);
+				setState(169); match(T__32);
 				}
 				break;
 			case 5:
 				{
-				setState(165); identifier();
+				setState(170); match(T__14);
 				}
 				break;
 			case 6:
 				{
-				setState(166); match(T__16);
+				setState(171); identifier();
 				}
 				break;
 			case 7:
 				{
-				setState(167); match(T__32);
-				setState(168); match(T__19);
-				setState(169); match(T__10);
-				setState(170); expression(0);
-				setState(171); match(T__7);
+				setState(172); match(T__16);
 				}
 				break;
 			case 8:
 				{
-				setState(173); match(T__32);
+				setState(173); match(T__31);
 				setState(174); identifier();
 				setState(175); match(T__18);
 				setState(176); match(T__2);
@@ -1004,28 +1004,28 @@ public class alpgc_jvsnParser extends Parser {
 		"\u009c\7\16\2\2\u009c\u009d\5\24\13\2\u009d\u009e\7\n\2\2\u009e\u00a0"+
 		"\3\2\2\2\u009fv\3\2\2\2\u009f~\3\2\2\2\u009f\u0086\3\2\2\2\u009f\u008c"+
 		"\3\2\2\2\u009f\u0092\3\2\2\2\u009f\u0097\3\2\2\2\u00a0\23\3\2\2\2\u00a1"+
-		"\u00a2\b\13\1\2\u00a2\u00a3\7 \2\2\u00a3\u00b9\5\24\13\4\u00a4\u00b9\7"+
-		"\'\2\2\u00a5\u00b9\7\6\2\2\u00a6\u00b9\7\27\2\2\u00a7\u00b9\5\20\t\2\u00a8"+
-		"\u00b9\7\25\2\2\u00a9\u00aa\7\5\2\2\u00aa\u00ab\7\22\2\2\u00ab\u00ac\7"+
-		"\33\2\2\u00ac\u00ad\5\24\13\2\u00ad\u00ae\7\36\2\2\u00ae\u00b9\3\2\2\2"+
-		"\u00af\u00b0\7\5\2\2\u00b0\u00b1\5\20\t\2\u00b1\u00b2\7\23\2\2\u00b2\u00b3"+
-		"\7#\2\2\u00b3\u00b9\3\2\2\2\u00b4\u00b5\7\23\2\2\u00b5\u00b6\5\24\13\2"+
-		"\u00b6\u00b7\7#\2\2\u00b7\u00b9\3\2\2\2\u00b8\u00a1\3\2\2\2\u00b8\u00a4"+
-		"\3\2\2\2\u00b8\u00a5\3\2\2\2\u00b8\u00a6\3\2\2\2\u00b8\u00a7\3\2\2\2\u00b8"+
-		"\u00a8\3\2\2\2\u00b8\u00a9\3\2\2\2\u00b8\u00af\3\2\2\2\u00b8\u00b4\3\2"+
-		"\2\2\u00b9\u00d7\3\2\2\2\u00ba\u00bb\f\17\2\2\u00bb\u00bc\t\2\2\2\u00bc"+
-		"\u00d6\5\24\13\20\u00bd\u00be\f\16\2\2\u00be\u00bf\7\33\2\2\u00bf\u00c0"+
-		"\5\24\13\2\u00c0\u00c1\7\36\2\2\u00c1\u00d6\3\2\2\2\u00c2\u00c3\f\r\2"+
-		"\2\u00c3\u00c4\7\30\2\2\u00c4\u00d6\7\4\2\2\u00c5\u00c6\f\f\2\2\u00c6"+
-		"\u00c7\7\30\2\2\u00c7\u00c8\5\20\t\2\u00c8\u00d1\7\23\2\2\u00c9\u00ce"+
-		"\5\24\13\2\u00ca\u00cb\7\26\2\2\u00cb\u00cd\5\24\13\2\u00cc\u00ca\3\2"+
-		"\2\2\u00cd\u00d0\3\2\2\2\u00ce\u00cc\3\2\2\2\u00ce\u00cf\3\2\2\2\u00cf"+
-		"\u00d2\3\2\2\2\u00d0\u00ce\3\2\2\2\u00d1\u00c9\3\2\2\2\u00d1\u00d2\3\2"+
-		"\2\2\u00d2\u00d3\3\2\2\2\u00d3\u00d4\7#\2\2\u00d4\u00d6\3\2\2\2\u00d5"+
-		"\u00ba\3\2\2\2\u00d5\u00bd\3\2\2\2\u00d5\u00c2\3\2\2\2\u00d5\u00c5\3\2"+
-		"\2\2\u00d6\u00d9\3\2\2\2\u00d7\u00d5\3\2\2\2\u00d7\u00d8\3\2\2\2\u00d8"+
-		"\25\3\2\2\2\u00d9\u00d7\3\2\2\2\22\32<?FL[agrz\u009f\u00b8\u00ce\u00d1"+
-		"\u00d5\u00d7";
+		"\u00a2\b\13\1\2\u00a2\u00a3\7 \2\2\u00a3\u00b9\5\24\13\4\u00a4\u00a5\7"+
+		"\6\2\2\u00a5\u00a6\7\22\2\2\u00a6\u00a7\7\33\2\2\u00a7\u00a8\5\24\13\2"+
+		"\u00a8\u00a9\7\36\2\2\u00a9\u00b9\3\2\2\2\u00aa\u00b9\7\'\2\2\u00ab\u00b9"+
+		"\7\5\2\2\u00ac\u00b9\7\27\2\2\u00ad\u00b9\5\20\t\2\u00ae\u00b9\7\25\2"+
+		"\2\u00af\u00b0\7\6\2\2\u00b0\u00b1\5\20\t\2\u00b1\u00b2\7\23\2\2\u00b2"+
+		"\u00b3\7#\2\2\u00b3\u00b9\3\2\2\2\u00b4\u00b5\7\23\2\2\u00b5\u00b6\5\24"+
+		"\13\2\u00b6\u00b7\7#\2\2\u00b7\u00b9\3\2\2\2\u00b8\u00a1\3\2\2\2\u00b8"+
+		"\u00a4\3\2\2\2\u00b8\u00aa\3\2\2\2\u00b8\u00ab\3\2\2\2\u00b8\u00ac\3\2"+
+		"\2\2\u00b8\u00ad\3\2\2\2\u00b8\u00ae\3\2\2\2\u00b8\u00af\3\2\2\2\u00b8"+
+		"\u00b4\3\2\2\2\u00b9\u00d7\3\2\2\2\u00ba\u00bb\f\17\2\2\u00bb\u00bc\t"+
+		"\2\2\2\u00bc\u00d6\5\24\13\20\u00bd\u00be\f\16\2\2\u00be\u00bf\7\33\2"+
+		"\2\u00bf\u00c0\5\24\13\2\u00c0\u00c1\7\36\2\2\u00c1\u00d6\3\2\2\2\u00c2"+
+		"\u00c3\f\r\2\2\u00c3\u00c4\7\30\2\2\u00c4\u00d6\7\4\2\2\u00c5\u00c6\f"+
+		"\f\2\2\u00c6\u00c7\7\30\2\2\u00c7\u00c8\5\20\t\2\u00c8\u00d1\7\23\2\2"+
+		"\u00c9\u00ce\5\24\13\2\u00ca\u00cb\7\26\2\2\u00cb\u00cd\5\24\13\2\u00cc"+
+		"\u00ca\3\2\2\2\u00cd\u00d0\3\2\2\2\u00ce\u00cc\3\2\2\2\u00ce\u00cf\3\2"+
+		"\2\2\u00cf\u00d2\3\2\2\2\u00d0\u00ce\3\2\2\2\u00d1\u00c9\3\2\2\2\u00d1"+
+		"\u00d2\3\2\2\2\u00d2\u00d3\3\2\2\2\u00d3\u00d4\7#\2\2\u00d4\u00d6\3\2"+
+		"\2\2\u00d5\u00ba\3\2\2\2\u00d5\u00bd\3\2\2\2\u00d5\u00c2\3\2\2\2\u00d5"+
+		"\u00c5\3\2\2\2\u00d6\u00d9\3\2\2\2\u00d7\u00d5\3\2\2\2\u00d7\u00d8\3\2"+
+		"\2\2\u00d8\25\3\2\2\2\u00d9\u00d7\3\2\2\2\22\32<?FL[agrz\u009f\u00b8\u00ce"+
+		"\u00d1\u00d5\u00d7";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

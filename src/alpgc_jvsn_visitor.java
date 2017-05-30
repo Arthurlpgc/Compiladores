@@ -1,9 +1,11 @@
 import java.util.List;
+
 import ast.*;
 
 public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
+	
 	public Object visitGoal(alpgc_jvsnParser.GoalContext ctx){
-		MainClass main=(MainClass) this.visit(ctx.getChild(0));
+		MainClass main = (MainClass) this.visit(ctx.getChild(0));
 		ClassDeclList lista=new ClassDeclList();
 		for(alpgc_jvsnParser.Class_declarationContext k:ctx.class_declaration()){
 			lista.addElement((ClassDecl)this.visit(k));
@@ -15,7 +17,10 @@ public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 		return new Identifier(ctx.getText());
 	}
 	public Object visitMain_class(alpgc_jvsnParser.Main_classContext ctx){
-		return new MainClass((Identifier)this.visit(ctx.identifier(0)),(Identifier)this.visit(ctx.identifier(1)),(Statement)this.visit(ctx.statement()));
+		Identifier i1 = new Identifier(ctx.identifier(0).getText());
+		Identifier i2 = new Identifier(ctx.identifier(1).getText());
+		Statement st = (Statement) this.visit(ctx.statement());
+		return new MainClass(i1, i2, st);
 	}
 	public Object visitClass_declaration(alpgc_jvsnParser.Class_declarationContext ctx){
 		VarDeclList varlist=new VarDeclList();
@@ -44,24 +49,25 @@ public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 		return new VarDecl(f.t,f.i);
 	}
 	public Object visitMethod_declaration(alpgc_jvsnParser.Method_declarationContext ctx){
-		Formal auxf=(Formal)this.visit(ctx.formal(0));
-		List<alpgc_jvsnParser.FormalContext> frms=ctx.formal();
-		frms.remove(0);
-		FormalList frmlist=new FormalList();
-		for(alpgc_jvsnParser.FormalContext frm:frms){
-			frmlist.addElement((Formal)this.visit(frm));
+		Formal idType = (Formal)this.visit(ctx.formal(0));
+		FormalList formalList = new FormalList();
+		VarDeclList varList = new VarDeclList();
+		StatementList stList = new StatementList();
+		Exp exp = (Exp) this.visit(ctx.expression()); 
+		
+		for(alpgc_jvsnParser.FormalContext formal : ctx.formal()) {
+			formalList.addElement((Formal) this.visit(formal));
 		}
-		List<alpgc_jvsnParser.Var_declarationContext> vrbs=ctx.var_declaration();
-		VarDeclList vrblist=new VarDeclList();
-		for(alpgc_jvsnParser.Var_declarationContext vrb:vrbs){
-			vrblist.addElement((VarDecl)this.visit(vrb));
+		
+		for(alpgc_jvsnParser.Var_declarationContext var: ctx.var_declaration()) {
+			varList.addElement((VarDecl) this.visit(var));
 		}
-		List<alpgc_jvsnParser.StatementContext> stts=ctx.statement();
-		StatementList sttlist=new StatementList();
-		for(alpgc_jvsnParser.StatementContext stt:stts){
-			sttlist.addElement((Statement)this.visit(stt));
+		
+		for(alpgc_jvsnParser.StatementContext stmt: ctx.statement()) {
+			stList.addElement((Statement) this.visit(stmt));
 		}
-		return new MethodDecl(auxf.t, auxf.i, frmlist, vrblist, sttlist, (Exp)this.visit(ctx.expression()));
+		
+		return new MethodDecl(idType.t, idType.i, formalList, varList, stList, exp);
 	}
 	public Object visitStatement(alpgc_jvsnParser.StatementContext ctx){
 		if(ctx.getChild(0).getText().equals("{")){
@@ -70,15 +76,38 @@ public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 				sl.addElement((Statement)this.visit(s));
 			}
 			return new Block(sl);
+			
 		}else if(ctx.getChild(0).getText().equals("if")){
-			return new If((Exp)this.visit(ctx.expression(0)),(Statement)this.visit(ctx.statement(0)),(Statement)this.visit(ctx.statement(1)));
-		}else if(ctx.getChild(0).getText().equals("while")){
-			return new While((Exp)this.visit(ctx.expression(0)),(Statement)this.visit(ctx.statement(0)));
-		}else if(ctx.getChild(0).getText().equals("System.out.println")){
-			return new Print((Exp)this.visit(ctx.expression(0)));
-		}else if(ctx.getChild(1).getText().equals("=")){
-			return new Assign((Identifier)this.visit(ctx.identifier()),(Exp)this.visit(ctx.expression(0)));
-		}else return new ArrayAssign((Identifier)this.visit(ctx.identifier()),(Exp)this.visit(ctx.expression(0)),(Exp)this.visit(ctx.expression(1)));
+			Exp exp = (Exp) this.visit(ctx.expression(0));
+			Statement s1 = (Statement) this.visit(ctx.statement(0));
+			Statement s2 = (Statement) this.visit(ctx.statement(1));
+			return new If(exp, s1, s2);
+			
+		}
+		else if(ctx.getChild(0).getText().equals("while")){
+			Exp exp = (Exp) this.visit(ctx.expression(0));
+			Statement s = (Statement) this.visit(ctx.statement(0));
+			return new While(exp, s);
+		}
+		
+		else if(ctx.getChild(0).getText().equals("System.out.println")){
+			Exp exp = (Exp) this.visit(ctx.expression(0));
+			return new Print(exp);
+		}
+		
+		else if(ctx.getChild(1).getText().equals("=")){
+			Identifier id = (Identifier) this.visit(ctx.identifier());
+			Exp exp = (Exp) this.visit(ctx.expression(0));
+			return new Assign(id, exp);
+		}
+		
+		else {
+			Identifier id = (Identifier) this.visit(ctx.identifier());
+			Exp exp1 = (Exp) this.visit(ctx.expression(0)),
+				exp2 = (Exp) this.visit(ctx.expression(1));
+			
+			return new ArrayAssign(id, exp1, exp2);
+		}
 	}
 	public Object visitExpression(alpgc_jvsnParser.ExpressionContext ctx){
 		if(ctx.getChildCount()==1&&ctx.getChild(0).getText().equals("true"))return new True();
@@ -88,7 +117,11 @@ public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 		else if(ctx.getChild(0).getText().equals("("))return ((Exp) this.visit(ctx.expression(0)));
 		else if(ctx.INTEGERLITERAL()!=null)return new IntegerLiteral(Integer.parseInt((ctx.INTEGERLITERAL().getText())));
 		else if(ctx.getChildCount()==1)return new IdentifierExp(ctx.getText());
-		else if(ctx.getChild(1).getText().equals("["))return new ArrayLookup((Exp)this.visit(ctx.expression(0)),(Exp)this.visit(ctx.expression(1)));
+		else if(ctx.getChild(1).getText().equals("[")) {
+			Exp arrayExpr = (Exp) this.visit(ctx.expression(0));
+			Exp indexExpr = (Exp) this.visit(ctx.expression(1));
+			return new ArrayLookup(arrayExpr,indexExpr);
+		}
 		else if(ctx.getChild(0).getText().equals("new")){
 			if(ctx.getChild(1).getText().equals("int")){
 				return new NewArray((Exp) this.visit(ctx.expression(0)));
@@ -107,14 +140,15 @@ public class alpgc_jvsn_visitor extends alpgc_jvsnBaseVisitor<Object> {
 			return new Times((Exp)this.visit(ctx.expression(0)),(Exp)this.visit(ctx.expression(1)));
 		}else if(ctx.getChild(2).getText().equals("length"))return new ArrayLength((Exp) this.visit(ctx.expression(0)));
 		else if(ctx.getChild(1).getText().equals(".")){
-			Exp base=(Exp) this.visit(ctx.expression(0));
+			Identifier id = (Identifier) this.visit(ctx.identifier());
 			List<alpgc_jvsnParser.ExpressionContext> listaexp = ctx.expression();
+			Exp base = (Exp) this.visit(listaexp.get(0));
 			listaexp.remove(0);
-			ExpList listaExpRet=new ExpList();
+			ExpList listaExpRet = new ExpList();
 			for(alpgc_jvsnParser.ExpressionContext item:listaexp){
 				listaExpRet.addElement((Exp)this.visit(item));
 			}
-			return new Call(base, (Identifier)this.visit(ctx.identifier()), listaExpRet);
+			return new Call(base, id, listaExpRet);
 		}
 		else return null;
 	}
