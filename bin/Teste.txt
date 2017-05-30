@@ -261,7 +261,7 @@ class LL{
 	aux01 = head.Print();
 	System.out.println(2220000);
 
-	head = head.Delete();
+	head = head.Delete(el02);
 	aux01 = head.Print();
 	System.out.println(33300000);
 

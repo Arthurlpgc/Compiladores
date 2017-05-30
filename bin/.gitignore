@@ -7,6 +7,13 @@
 /alpgc_jvsnParser.java
 /alpgc_jvsnVisitor.java
 /alpgc_jvsn_visitor.java
+/.gitignore
+/Teste.txt
+/alpgc_jvsn.g4
+/alpgc_jvsnBaseListener.class
+/alpgc_jvsnBaseVisitor.class
+/alpgc_jvsnLexer.class
+/alpgc_jvsnListener.class
 /alpgc_jvsnParser$Class_declarationContext.class
 /alpgc_jvsnParser$ExpressionContext.class
 /alpgc_jvsnParser$FormalContext.class

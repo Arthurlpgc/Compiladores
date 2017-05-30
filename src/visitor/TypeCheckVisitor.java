@@ -90,6 +90,11 @@ public class TypeCheckVisitor implements TypeVisitor {
 	// VarDeclList vl;
 	// MethodDeclList ml;
 	public Type visit(ClassDeclExtends n) {
+		this.currClass = this.symbolTable.getClass(n.i.toString());
+		Class parent = this.symbolTable.getClass(n.j.toString());
+		if(parent == null) { //Invalid inheritance
+			System.out.println("Error Inheritance: The extended class is not defined");
+		}
 		n.i.accept(this);
 		n.j.accept(this);
 		for (int i = 0; i < n.vl.size(); i++) {
