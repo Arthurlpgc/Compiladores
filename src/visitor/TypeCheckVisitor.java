@@ -62,6 +62,7 @@ public class TypeCheckVisitor implements TypeVisitor {
 	// Identifier i1,i2;
 	// Statement s;
 	public Type visit(MainClass n) {
+		this.currClass = this.symbolTable.getClass(n.i1.toString());
 		n.i1.accept(this);
 		n.i2.accept(this);
 		n.s.accept(this);
@@ -103,9 +104,12 @@ public class TypeCheckVisitor implements TypeVisitor {
 	// Type t;
 	// Identifier i;
 	public Type visit(VarDecl n) {
+		Type type = n.t.accept(this);
+		String id = n.i.toString();
+		if(this.currMethod == null) {
+			if(!this.currClass.addVar(id, type));
+		}
 		Variable var = this.currClass.getVar(n.i.toString());
-		String id = var.id();
-		Type type = var.type();
 		n.t.accept(this);
 		n.i.accept(this);
 		return null;
@@ -199,9 +203,9 @@ public class TypeCheckVisitor implements TypeVisitor {
 	// Identifier i;
 	// Exp e;
 	public Type visit(Assign n) {
-		Type identifier = n.i.accept(this);
+		Type typeIdentifier = this.symbolTable.getVarType(this.currMethod, this.currClass, n.i.toString());
 		Type expression = n.e.accept(this);
-		if(!(this.symbolTable.compareTypes(identifier, expression))) {
+		if(!(this.symbolTable.compareTypes(typeIdentifier, expression))) {
 			System.out.println("Error: Not the same type");
 		}
 		return null;
@@ -231,11 +235,11 @@ public class TypeCheckVisitor implements TypeVisitor {
 	public Type visit(And n) {
 		Type expr1 = n.e1.accept(this);
 		Type expr2 = n.e2.accept(this);
-		if(!(expr1 instanceof BooleanType) || !(expr2 instanceof BooleanType)) {
-			System.out.println("Error: Not a boolean");
+		if(!(expr1 instanceof IntegerType)) {
+			System.out.println("Error: Type of first expression isn't boolean");
 		}
-		else if(!this.symbolTable.compareTypes(expr1, expr2)) {
-			System.out.println("Error: Not the same type");
+		else if(!(expr1 instanceof IntegerType)){
+			System.out.println("Error: Type of second expression isn't boolean");
 		}
 		return new BooleanType();
 	}
@@ -244,11 +248,11 @@ public class TypeCheckVisitor implements TypeVisitor {
 	public Type visit(LessThan n) {
 		Type expr1 = n.e1.accept(this);
 		Type expr2 = n.e2.accept(this);
-		if(!(expr1 instanceof IntegerType) || !(expr2 instanceof IntegerType)) {
-			System.out.println("Error: Not an integer");
+		if(!(expr1 instanceof IntegerType)) {
+			System.out.println("Error: Type of first expression isn't boolean");
 		}
-		else if(!this.symbolTable.compareTypes(expr1, expr2)) {
-			System.out.println("Error: Not the same type");
+		else if(!(expr1 instanceof IntegerType)){
+			System.out.println("Error: Type of second expression isn't boolean");
 		}
 		return new BooleanType();
 	}
@@ -257,11 +261,11 @@ public class TypeCheckVisitor implements TypeVisitor {
 	public Type visit(Plus n) {
 		Type expr1 = n.e1.accept(this);
 		Type expr2 = n.e2.accept(this);
-		if(!(expr1 instanceof IntegerType) || !(expr2 instanceof IntegerType)) {
-			System.out.println("Error: Not an integer");
+		if(!(expr1 instanceof IntegerType)) {
+			System.out.println("Error: Type of first expression isn't integer");
 		}
-		else if(!this.symbolTable.compareTypes(expr1, expr2)) {
-			System.out.println("Error: Not the same type");
+		else if(!(expr1 instanceof IntegerType)){
+			System.out.println("Error: Type of second expression isn't integer");
 		}
 		return new IntegerType();
 	}
@@ -270,11 +274,11 @@ public class TypeCheckVisitor implements TypeVisitor {
 	public Type visit(Minus n) {
 		Type expr1 = n.e1.accept(this);
 		Type expr2 = n.e2.accept(this);
-		if(!(expr1 instanceof IntegerType) || !(expr2 instanceof IntegerType)) {
-			System.out.println("Error: Not an integer");
+		if(!(expr1 instanceof IntegerType)) {
+			System.out.println("Error: Type of first expression isn't integer");
 		}
-		else if(!this.symbolTable.compareTypes(expr1, expr2)) {
-			System.out.println("Error: Not the same type");
+		else if(!(expr1 instanceof IntegerType)){
+			System.out.println("Error: Type of second expression isn't integer");
 		}
 		return new IntegerType();
 	}
@@ -283,11 +287,11 @@ public class TypeCheckVisitor implements TypeVisitor {
 	public Type visit(Times n) {
 		Type expr1 = n.e1.accept(this);
 		Type expr2 = n.e2.accept(this);
-		if(!(expr1 instanceof IntegerType) || !(expr2 instanceof IntegerType)) {
-			System.out.println("Error: Not an integer");
+		if(!(expr1 instanceof IntegerType)) {
+			System.out.println("Error: Type of first expression isn't integer");
 		}
-		else if(!this.symbolTable.compareTypes(expr1, expr2)) {
-			System.out.println("Error: Not the same type");
+		else if(!(expr1 instanceof IntegerType)){
+			System.out.println("Error: Type of second expression isn't integer");
 		}
 		return new IntegerType();
 	}
@@ -297,10 +301,10 @@ public class TypeCheckVisitor implements TypeVisitor {
 		Type arrayType = n.e1.accept(this);
 		Type intType = n.e2.accept(this);
 		if(!(arrayType instanceof IntArrayType)) {
-			System.out.println("Error: Not an array");
+			System.out.println("Error: Invalid array");
 		}
 		else if(!(intType instanceof IntegerType)) {
-			System.out.println("Error: Not a valid index");
+			System.out.println("Error: Invalid index");
 		}
 		return null;
 	}
@@ -309,7 +313,7 @@ public class TypeCheckVisitor implements TypeVisitor {
 	public Type visit(ArrayLength n) {
 		Type type = n.e.accept(this);
 		if(!(type instanceof IntArrayType)) {
-			System.out.println("Error: Not an array");
+			System.out.println("Error: The expression isn't an array");
 		}
 		return null;
 	}
@@ -317,15 +321,24 @@ public class TypeCheckVisitor implements TypeVisitor {
 	// Exp e;
 	// Identifier i;
 	// ExpList el;
-	public Type visit(Call n) { //Function call (e.g.: a.call();
-		Type class_ = n.e.accept(this);
-		Type method_ = n.i.accept(this);
-		
-		
-		for (int i = 0; i < n.el.size(); i++) {
-			n.el.elementAt(i).accept(this);
+	public Type visit(Call n) {
+		Method m = null;
+		Type typeExpr = n.e.accept(this);
+		if (typeExpr instanceof IdentifierType) {
+			Class cl = symbolTable.getClass(((IdentifierType) typeExpr).s);
+			if (cl == null) {
+				System.out.println("Error: The class " + cl.getId() + " doesn't exists");
+			}
+			else {
+				m = cl.getMethod(n.i.toString());
+			}
 		}
-		return null;
+		else{
+			System.out.println("Error: Invalid class");
+		}
+		
+		if(m == null) return null;
+		return m.type();
 	}
 
 	// int i;
@@ -354,22 +367,26 @@ public class TypeCheckVisitor implements TypeVisitor {
 	public Type visit(NewArray n) {
 		Type type = n.e.accept(this);
 		if(!(type instanceof IntegerType)) {
-			System.out.println("Error: Not an integer");
+			System.out.println("Error: The expression isn't an integer");
 		}
 		return new IntArrayType();
 	}
 
 	// Identifier i;
 	public Type visit(NewObject n) {
-		Type type = this.symbolTable.getVarType(this.currMethod, this.currClass, n.i.toString());
-		return type;
+		Class c = this.symbolTable.getClass(n.i.toString());
+		if(c == null) {
+			System.out.println("Error: The class " + n.i.toString() + " doesn't exists");
+		}
+		return c.type();
 	}
 
 	// Exp e;
 	public Type visit(Not n) {
+	
 		Type type = n.e.accept(this);
 		if(!(type instanceof BooleanType)) {
-			System.out.println("Error: Not a boolean");
+			System.out.println("Error: The expression isn't a boolean expression");
 		}
 		return new BooleanType();
 	}

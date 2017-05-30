@@ -67,6 +67,9 @@ public class BuildSymbolTableVisitor implements Visitor {
 	// Identifier i1,i2;
 	// Statement s;
 	public void visit(MainClass n) { //MainClass doesn't extends ClassDecl. So it isn't necessary to add it on the SymbolTable
+		this.symbolTable.addClass(n.i1.toString(), null);
+		this.currClass = this.symbolTable.getClass(n.i1.toString());
+		this.currClass.addMethod("main", null);
 		n.i1.accept(this);
 		n.i2.accept(this);
 		n.s.accept(this);
@@ -76,7 +79,10 @@ public class BuildSymbolTableVisitor implements Visitor {
 	// VarDeclList vl;
 	// MethodDeclList ml;
 	public void visit(ClassDeclSimple n) {
-		this.symbolTable.addClass(n.i.toString(), null);
+		boolean sucess = this.symbolTable.addClass(n.i.toString(), null);
+		if(!sucess) {
+			System.out.println("Error: Class "+ n.i.toString() +" already declared");
+		}
 		this.currClass = symbolTable.getClass(n.i.toString());
 		n.i.accept(this);
 		for (int i = 0; i < n.vl.size(); i++) {
@@ -87,6 +93,7 @@ public class BuildSymbolTableVisitor implements Visitor {
 			MethodDecl method = n.ml.elementAt(i);
 			method.accept(this);
 		}
+		this.currClass = null;
 	}
 
 	// Identifier i;
@@ -94,7 +101,11 @@ public class BuildSymbolTableVisitor implements Visitor {
 	// VarDeclList vl;
 	// MethodDeclList ml;
 	public void visit(ClassDeclExtends n) {
-		this.symbolTable.addClass(n.i.toString(), n.j.toString());
+		boolean sucess = this.symbolTable.addClass(n.i.toString(), n.j.toString());
+		if(!sucess) {
+			System.out.println("Error: Class " + n.i.toString() +  " already declared");
+		}
+		this.currClass = this.symbolTable.getClass(n.i.toString());
 		n.i.accept(this);
 		n.j.accept(this);
 		for (int i = 0; i < n.vl.size(); i++) {
@@ -105,12 +116,24 @@ public class BuildSymbolTableVisitor implements Visitor {
 			MethodDecl method = n.ml.elementAt(i);
 			method.accept(this);
 		}
+		this.currClass = null;
 	}
 
 	// Type t;
 	// Identifier i;
 	public void visit(VarDecl n) {
-		this.currClass.addVar(n.i.toString(), n.t);
+		if(this.currMethod == null) {
+			boolean sucess = this.currClass.addVar(n.i.toString(), n.t);
+			if(!sucess) {
+				System.out.println("Error: Variable already declared in this class");
+			}
+		}
+		else {
+			boolean sucess = this.currMethod.addVar(n.i.toString(), n.t);
+			if(!sucess) {
+				System.out.println("Error: Variable already declared in this method");
+			}
+		}
 		n.t.accept(this);
 		n.i.accept(this);
 	}
@@ -122,29 +145,35 @@ public class BuildSymbolTableVisitor implements Visitor {
 	// StatementList sl;
 	// Exp e;
 	public void visit(MethodDecl n) {
-		this.currClass.addMethod(n.i.toString(), n.t);
+		boolean sucess = this.currClass.addMethod(n.i.toString(), n.t);
+		if(!sucess) {
+			System.out.println("Error: Method " + n.i.toString() + " already declared");
+		}
 		this.currMethod = this.currClass.getMethod(n.i.toString());
 		n.t.accept(this);
 		n.i.accept(this);
-		for (int i = 0; i < n.fl.size(); i++) { // The first formal (type and indentfier's method) is removed
+		for (int i = 0; i < n.fl.size(); i++) {
 			Formal formal = n.fl.elementAt(i);
 			formal.accept(this);
 		}
 		for (int i = 0; i < n.vl.size(); i++) {
 			VarDecl var = n.vl.elementAt(i);
-			this.currMethod.addVar(var.i.toString(), var.t);
-			n.vl.elementAt(i).accept(this);
+			var.accept(this);
 		}
-		for (int i = 0; i < n.sl.size(); i++) { //Statement is the method's body
+		for (int i = 0; i < n.sl.size(); i++) {
 			n.sl.elementAt(i).accept(this);
 		}
 		n.e.accept(this);
+		this.currMethod = null;
 	}
 
 	// Type t;
 	// Identifier i;
 	public void visit(Formal n) {
-		this.currMethod.addParam(n.i.toString(), n.t);
+		boolean sucess = this.currMethod.addParam(n.i.toString(), n.t);
+		if(!sucess) {
+			System.out.println("Error: The parameter " + n.i.toString() + " of type " + n.t.toString() + "already present");
+		}
 		n.t.accept(this);
 		n.i.accept(this);
 	}
